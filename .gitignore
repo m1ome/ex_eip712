@@ -29,3 +29,4 @@ ex_eip712-*.tar
 .cargo
 priv/native
 .idea
+.elixir_ls

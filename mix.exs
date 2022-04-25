@@ -10,8 +10,12 @@ defmodule ExEip712.MixProject do
       deps: deps(),
       description: description(),
       package: package(),
-      name: "ExEip712",
-      source_url: "https://github.com/m1ome/ex_eip712"
+      name: "EIP712",
+      source_url: "https://github.com/m1ome/ex_eip712",
+      docs: [
+        main: "EIP712",
+        extras: ["README.md"]
+      ]
     ]
   end
 
@@ -25,7 +29,8 @@ defmodule ExEip712.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:rustler, "~> 0.23.0"}
+      {:rustler, "~> 0.23.0"},
+      {:ex_doc, "~> 0.27", only: :dev, runtime: false}
     ]
   end
 
@@ -38,8 +43,7 @@ defmodule ExEip712.MixProject do
       # This option is only needed when you don't want to use the OTP application name
       name: "ex_eip712",
       # These are the default files included in the package
-      files: ~w(lib native .formatter.exs mix.exs README* readme* LICENSE*
-                license* CHANGELOG* changelog*),
+      files: ~w(lib native/eip712/Cargo.* native/eip712/crates/** native/eip712/src/*.rs .formatter.exs mix.exs README.md),
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/m1ome/ex_eip712"}
     ]

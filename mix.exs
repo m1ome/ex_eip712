@@ -4,7 +4,7 @@ defmodule ExEip712.MixProject do
   def project do
     [
       app: :ex_eip712,
-      version: "0.2.0",
+      version: "0.2.1",
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -44,7 +44,7 @@ defmodule ExEip712.MixProject do
       name: "ex_eip712",
       # These are the default files included in the package
       files:
-        ~w(lib native/eip712/Cargo.* native/eip712/crates/** native/eip712/src/*.rs .formatter.exs mix.exs README.md),
+        ~w(lib native/eip712/.cargo/** native/eip712/Cargo.* native/eip712/crates/** native/eip712/src/*.rs .formatter.exs mix.exs README.md),
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/m1ome/ex_eip712"}
     ]

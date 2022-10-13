@@ -4,6 +4,7 @@ use ethsign::SecretKey;
 use rustc_hex::{FromHex, ToHex};
 use anyhow::{anyhow, Result};
 use rustler::{Encoder, Env, NifResult, Term};
+use web3_hash_utils::{hash_message};
 
 mod atoms {
     rustler::atoms! {
@@ -27,7 +28,22 @@ pub fn sign<'a>(env: Env<'a>, message: String, secret: String) -> NifResult<Term
     }
 }
 
-rustler::init!("Elixir.EIP712", [sign]);
+#[rustler::nif]
+pub fn sign_message<'a>(env: Env<'a>, message: String, secret: String) -> NifResult<Term<'a>> {
+    let s :Vec<u8> = match secret.from_hex() {
+        Ok(secret) => secret,
+        Err(error) => return Ok((atoms::error(), error.to_string()).encode(env))
+    };
+
+    return match sign_plain_message(&message, &s) {
+        Ok(signature) => {
+            Ok((atoms::ok(), format!("0x{}", signature)).encode(env))
+        },
+        Err(error) => Ok((atoms::error(), error.to_string()).encode(env))
+    }
+}
+
+rustler::init!("Elixir.EIP712", [sign, sign_message]);
 
 fn sign_typed_data(message: &str, secret: &[u8]) -> Result<String>{
     // Hashing message as EIP-712
@@ -45,6 +61,32 @@ fn sign_typed_data(message: &str, secret: &[u8]) -> Result<String>{
     sig[64] = signature.v + 27;
 
     return Ok(sig.to_hex());
+}
+
+fn sign_plain_message(message: &str, secret: &[u8]) -> Result<String> {
+    let hash = hash_message(message);
+
+    let secret = SecretKey::from_raw(secret)?;
+    let signature = secret.sign(hash.as_bytes())?;
+
+    let mut sig = [0u8; 65];
+    sig[0..32].copy_from_slice(signature.r.as_ref());
+    sig[32..64].copy_from_slice(signature.s.as_ref());
+    sig[64] = signature.v + 27;
+
+    return Ok(sig.to_hex());
+}
+
+#[test]
+fn it_signs_message() {
+    let string = "100:200:300";
+    
+    let secret :Vec<u8>  = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+        .from_hex()
+        .unwrap();
+        
+    let res = sign_message(string, &secret).unwrap();
+    assert_eq!(res, "7b03070fcceedd12d2e4c7ac8e12c6567dfc41b1b416a4cd2a3fb6ca390666d32f28f202d6bc241e7af4a7b5ccde03061de8c4a944e32e5a439157c7d4c074841b")
 }
 
 #[test]

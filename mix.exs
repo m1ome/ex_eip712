@@ -4,7 +4,7 @@ defmodule ExEip712.MixProject do
   def project do
     [
       app: :ex_eip712,
-      version: "0.1.0",
+      version: "0.2.0",
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -29,7 +29,7 @@ defmodule ExEip712.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:rustler, "~> 0.23.0"},
+      {:rustler, "~> 0.26"},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false}
     ]
   end
@@ -43,7 +43,8 @@ defmodule ExEip712.MixProject do
       # This option is only needed when you don't want to use the OTP application name
       name: "ex_eip712",
       # These are the default files included in the package
-      files: ~w(lib native/eip712/Cargo.* native/eip712/crates/** native/eip712/src/*.rs .formatter.exs mix.exs README.md),
+      files:
+        ~w(lib native/eip712/Cargo.* native/eip712/crates/** native/eip712/src/*.rs .formatter.exs mix.exs README.md),
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/m1ome/ex_eip712"}
     ]

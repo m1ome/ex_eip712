@@ -4,8 +4,8 @@ defmodule ExEip712.MixProject do
   def project do
     [
       app: :ex_eip712,
-      version: "0.2.1",
-      elixir: "~> 1.13",
+      version: "0.3.0",
+      elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       description: description(),
